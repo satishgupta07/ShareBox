@@ -71,4 +71,13 @@ body, .drop-zone {
       transform: translateY(-5px);
   }
 
+  #fileInput {
+      display: none;
+  }
+
+  #browseBtn {
+      color: #2196f3;
+      cursor: pointer;
+  }
+
   
