@@ -30,6 +30,12 @@ body, .drop-zone {
     border: 2px dashed var(--border-color);
     margin: 30px;
     border-radius: 10px;
+    transition: all .2s ease;
+}
+
+.dragged.drop-zone {
+    background-color: var(--main-bg-color);
+    border-color: #2196f3;
 }
 
 .icon-container {
@@ -41,7 +47,7 @@ body, .drop-zone {
   .icon-container img {
     width: 75px;
     position: absolute;
-    /* transition: transform 0.25s ease-in-out; */
+    transition: transform 0.25s ease-in-out;
     transform-origin: bottom;
   }
 
@@ -53,10 +59,16 @@ body, .drop-zone {
       filter: grayscale(.5);
   }
 
-  .icon-container .right {
+  .dragged .icon-container .right {
       transform: rotate(10deg) translateX(20px) scale(.9);
   }
 
-  .icon-container .left {
+  .dragged .icon-container .left {
       transform: rotate(-10deg) translateX(-20px) scale(.9);
   }
+
+  .dragged .icon-container .center {
+      transform: translateY(-5px);
+  }
+
+  
