@@ -7,9 +7,8 @@ const PORT = process.env.PORT || 3000
 const connectDB = require('./config/db')
 connectDB();
 
-app.get('/', (req, res) => {
-    res.send("Hello from server")
-})
+// Routes
+app.use('/api/files', require('./routes/files'))
 
 app.listen(PORT, () => {
     console.log(`Server is listening on http://localhost:${PORT}`);
