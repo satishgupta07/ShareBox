@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const multer = require('multer');
 const path = require('path');
+const File = require('../models/File');
 const { v4: uuidv4 } = require('uuid');
 
 
@@ -17,10 +18,11 @@ let upload = multer({
      limits:{ fileSize: 1000000 * 100 },  //100mb
     }).single('myfile'); 
 
-router.post('/', () => {
+
+router.post('/', (req, res) => {
     
     // Store file
-        upload(req, res, (err) => {
+      upload(req, res, async (err) => {
 
             // Validate Request 
             if(!req.file){
