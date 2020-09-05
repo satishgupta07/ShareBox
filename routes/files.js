@@ -41,13 +41,56 @@ router.post('/', (req, res) => {
                 size: req.file.size
             });
             const response = await file.save();
+           
+            // Response -> Link
             res.json({ file: `${process.env.APP_BASE_URL}/files/${response.uuid}` });
         })
 
-    
-
-    // Response -> Link
 })
+
+
+router.post('/send', async (req, res) => {
+
+    const { uuid, emailTo, emailFrom, expiresIn } = req.body;
+
+    // Validate Request
+    // if(!uuid || !emailTo || !emailFrom) {
+    //     return res.status(422).send({ error: 'All fields are required except expiry.'});
+    // }
+
+    // Get data from db 
+    try {
+      const file = await File.findOne({ uuid: uuid });
+      if(file.sender) {
+        return res.status(422).send({ error: 'Email already sent once.'});
+      }
+      file.sender = emailFrom;
+      file.receiver = emailTo;
+      const response = await file.save();
+
+      // Send email
+      const sendMail = require('../services/emailService');
+      sendMail({
+        from: emailFrom,
+        to: emailTo,
+        subject: 'InShare file sharing',
+        text: `${emailFrom} shared a file with you.`,
+        html: require('../services/emailTemplate')({
+                  emailFrom, 
+                  downloadLink: `${process.env.APP_BASE_URL}/files/${file.uuid}?source=email` ,
+                  size: parseInt(file.size/1000) + ' KB',
+                  expires: '24 hours'
+              })
+      }).then(() => {
+        return res.json({success: true});
+      }).catch(err => {
+        return res.status(500).json({error: 'Error in email sending.'});
+      });
+  } catch(err) {
+    return res.status(500).send({ error: 'Something went wrong.'});
+  }
+  
+  });
 
 
 module.exports = router;

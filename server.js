@@ -10,6 +10,8 @@ connectDB();
 
 app.use(express.static('public'));
 
+app.use(express.json());
+
 // Template Engine
 app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'ejs');
